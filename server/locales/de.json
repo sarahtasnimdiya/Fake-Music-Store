@@ -1,0 +1,53 @@
+{
+  "code": "de",
+  "fakerLocale": "de",
+  "displayName": "Deutsch (Deutschland)",
+  "genres": ["Pop", "Rock", "Schlager", "Volksmusik", "Elektro", "Hip-Hop", "Punk", "Jazz", "Blues", "Techno", "Indie", "Metal", "Lo-Fi", "Ambient", "Synthwave", "Retro", "Classic", "Deep House", "Soul"],
+  "labels": ["Apfel Schallplatten", "Blaumeise Klang", "Nordstern Musik", "Samtgasse Aufnahmen", "Granit Audio", "Papiermond Platten", "Echopark Label"],
+  "titleTemplates": [
+    "{Adj}e {Noun}",
+    "Der {Noun} der {Noun}",
+    "{Verb}ende {Noun}",
+    "{Noun} und {Noun}",
+    "Alle Lieben {Noun}",
+    "Niemals {Verb}",
+    "{Adj}, {Adj}",
+    "Tritt In Den {Noun}",
+    "Mein Lieber {Noun}",
+    "{Number} Mal {Adj}e {Noun}"
+  ],
+  "albumTemplates": [
+    "{Adj}e {Noun}",
+    "{Noun} und {Noun}",
+    "Oh, Mein {Noun}",
+    "{Verb}ende {Noun}",
+    "Alles Für Den {Noun}",
+    "Tu Es Oder {Verb}",
+    "Werde {Adj}!"
+  ],
+  "bandTemplates": [
+    "Die {Noun} Crew",
+    "{Name} und {Noun}",
+    "{Name} und Die {Noun} Band",
+    "{Adj}e {Noun}",
+    "{Name} und die Kakerlaken"
+  ],
+  "reviewTemplates": [
+    "Dieser {adj}e Track hat mich wirklich berührt — pure {genre}-Energie von Anfang bis Ende.",
+    "{artist} hat sich selbst übertroffen. Der {noun} trifft jedes Mal ins Schwarze.",
+    "Nicht das, was ich erwartet habe, aber der {adj}e Hook von '{title}' geht mir nicht aus dem Kopf.",
+    "Eine {adj}e Ergänzung für jede {genre}-Playlist. Würde ich weiterempfehlen.",
+    "Die Produktion wirkt etwas {adj}, aber die Melodie trägt den Song.",
+    "Beim dritten Hören bin ich immer noch {verbIng} von der Bridge."
+  ],
+  "lyricTemplates": [
+    "Jeder {noun} erinnert mich an dich, reißt mich {verbIng} auseinander",
+    "In den tausend {noun}s, die leuchten, bist du der hellste {noun}",
+    "Im Morgengrauen bist du alles, was ich will, egal wie weit",
+    "Oh {name}, ich versuche loszulassen",
+    "{Adj}e Nächte, {adj}e Lichter, rufen deinen Namen",
+    "Wir waren {adj} wie ein {noun} im Regen",
+    "Halt dich fest am {noun}, bevor er entgleitet",
+    "Dieser {noun} ist für dich, wo immer du auch bist"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "code": "en",
+  "fakerLocale": "en",
+  "displayName": "English (US)",
+  "genres": ["Pop", "Rock", "House", "Deep House", "Folk", "Heavy Metal", "Rock'n'Roll", "Electronic", "Country", "Jazz", "Hip-Hop", "Reggae", "Blues", "Punk", "Soul", "Disco", "Lo-Fi", "Ambient", "Synthwave", "Retro", "Classic"],
+  "labels": ["Apple Records", "Bluebird Sound", "Northstar Music", "Velvet Lane Records", "Granite Audio", "Paper Moon Records", "Echo Park Label", "Tin Roof Recordings"],
+  "titleTemplates": [
+    "{Adj} {Noun}",
+    "The {Noun} of {Noun}",
+    "{Verb}ing {Noun}",
+    "{Noun} and {Noun}",
+    "All {Nouns} Go",
+    "Never {Verb} {Noun}",
+    "{Adj}, {Adj}",
+    "Kick In The {Noun}",
+    "Stuck To My {Noun} Dear",
+    "{Number} {Adj} {Nouns}"
+  ],
+  "albumTemplates": [
+    "{Adj} {Noun}",
+    "{Noun} and {Noun}",
+    "Oh, My {Noun}",
+    "{Verb}ing {Noun}",
+    "All My {Nouns}",
+    "Do or {Verb}",
+    "Get {Adj}!"
+  ],
+  "bandTemplates": [
+    "The {Noun}s",
+    "{Name} and {Noun}",
+    "{Name} and The {Noun}s",
+    "{Adj} {Noun}",
+    "{Name} and Cockroaches"
+  ],
+  "reviewTemplates": [
+    "This {adj} track really {verbPast} me — pure {genre} energy from start to finish.",
+    "{artist} outdid themselves on this one. The {noun} hits different every time.",
+    "Not what I expected, but the {adj} hook on '{title}' is stuck in my head.",
+    "A {adj} addition to any {genre} playlist. Would recommend to a friend.",
+    "The production feels a bit {adj}, but the melody carries it through.",
+    "Three listens in and I'm still {verbIng} over the bridge section."
+  ],
+  "lyricTemplates": [
+    "Every {noun} reminds me of you, {verbIng} me apart",
+    "In the million {nouns} that shine, you're the brightest {noun}",
+    "At the break of dawn, you're all I want, no matter how far",
+    "Oh {name}, I try to move on",
+    "{Adj} nights, {adj} lights, calling out your name",
+    "We were {adj} like a {noun} in the rain",
+    "Hold on to the {noun}, before it slips away",
+    "This {noun} is for you, wherever you are"
+  ]
+}
