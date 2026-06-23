@@ -38,16 +38,14 @@ async function generateCover(seed, index, title, artist, genre) {
     ctx.fillRect(0, 0, size, size);
   }
 
-  const overlayH = size * 0.52;
-  const steps = 60;
+  const overlayH = Math.floor(size * 0.52);
+  const overlayTop = size - overlayH;
   ctx.save();
   ctx.fillStyle = '#000000';
-  for (let i = 0; i < steps; i++) {
-    const t = i / (steps - 1);
-    ctx.globalAlpha = Math.pow(t, 1.5) * 0.86;
-    const y = Math.floor((size - overlayH) + t * overlayH);
-    const h = Math.ceil(overlayH / steps) + 2; 
-    ctx.fillRect(0, y, size, h);
+  for (let i = 0; i < overlayH; i++) {
+    const t = i / (overlayH - 1);
+    ctx.globalAlpha = Math.pow(t, 1.5) * 0.87;
+    ctx.fillRect(0,  overlayTop + i, size, 1);
   }
   ctx.restore();
 
