@@ -109,7 +109,7 @@ function generateLikes(seed, index, likesAvg) {
   return times(likesAvg, addOne, rng)(0);
 }
 
-function generateRecord(seed, index, regionCode, likesAvg) {
+async function generateRecord(seed, index, regionCode, likesAvg) {
   const locale = LOCALES[regionCode] || LOCALES.en;
   const title = generateTitle(seed, index, locale);
   const artist = generateArtist(seed, index, locale);
@@ -118,16 +118,16 @@ function generateRecord(seed, index, regionCode, likesAvg) {
   const label = generateLabel(seed, index, locale);
   const year = generateYear(seed, index);
   const likes = generateLikes(seed, index, likesAvg);
-  const cover = generateCover(seed, index, title, artist, genre);
+  const cover = await generateCover(seed, index, title, artist, genre);
 
   return { index, title, artist, album, genre, likes, label, year, cover };
 }
 
-function generatePage(seed, regionCode, likesAvg, page, pageSize) {
+async function generatePage(seed, regionCode, likesAvg, page, pageSize) {
   const startIndex = (page - 1) * pageSize + 1;
   const items = [];
   for (let i = 0; i < pageSize; i++) {
-    items.push(generateRecord(seed, startIndex + i, regionCode, likesAvg));
+    items.push(await generateRecord(seed, startIndex + i, regionCode, likesAvg));
   }
   return items;
 }

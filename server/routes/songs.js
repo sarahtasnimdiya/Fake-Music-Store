@@ -17,20 +17,33 @@ function parseParams(req){
 
 router.get('/locales',(req,res)=>res.json(listLocales()));
 
-router.get('/songs',(req,res)=>{
+router.get('/songs', async (req,res)=>{
+   try {
   const{seed,region,likesAvg,page,pageSize}=parseParams(req);
-  res.json({page,pageSize,items:generatePage(seed,region,likesAvg,page,pageSize)});
+  const items = await generatePage(seed, region, likesAvg, page, pageSize);
+  res.json({page,pageSize,items});
+   }
+   catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Generation failed' });
+  }
 });
 
-router.get('/songs/:index/detail',(req,res)=>{
+router.get('/songs/:index/detail',async (req,res)=>{
+  try {
   const index=Number(req.params.index);
   const{seed,region,likesAvg}=parseParams(req);
   if(!Number.isInteger(index)||index<1) return res.status(400).json({message:'Invalid index.'});
-  const record=generateRecord(seed,index,region,likesAvg);
+  const record= await generateRecord(seed,index,region,likesAvg);
   const audio=generateAudio(seed,index,record.genre);
   const lyrics=generateLyrics(seed,index,region,audio.durationSeconds);
   const review=generateReview(seed,index,region,record);
   res.json({...record,audio:audio.dataUri,durationSeconds:audio.durationSeconds,lyrics,review});
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Generation failed' });
+  }
 });
 
 module.exports=router;
