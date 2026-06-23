@@ -40,7 +40,7 @@ async function generateCover(seed, index, title, artist, genre) {
 
   const overlayH = size * 0.52;
   const overlay = ctx.createLinearGradient(0, size - overlayH, 0, size);
-  overlay.addColorStop(0, 'rgba(0,0,0,0)');
+  overlay.addColorStop(0, 'rgba(0,0,0,0.01)');
   overlay.addColorStop(0.45, 'rgba(0,0,0,0.65)');
   overlay.addColorStop(1, 'rgba(0,0,0,0.88)');
   ctx.fillStyle = overlay;
