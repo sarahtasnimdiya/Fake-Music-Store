@@ -39,12 +39,17 @@ async function generateCover(seed, index, title, artist, genre) {
   }
 
   const overlayH = size * 0.52;
-  const overlay = ctx.createLinearGradient(0, size - overlayH, 0, size);
-  overlay.addColorStop(0, 'rgba(0,0,0,0.01)');
-  overlay.addColorStop(0.45, 'rgba(0,0,0,0.65)');
-  overlay.addColorStop(1, 'rgba(0,0,0,0.88)');
-  ctx.fillStyle = overlay;
-  ctx.fillRect(0, size - overlayH, size, overlayH);
+  const steps = 60;
+  ctx.save();
+  ctx.fillStyle = '#000000';
+  for (let i = 0; i < steps; i++) {
+    const t = i / (steps - 1);
+    ctx.globalAlpha = Math.pow(t, 1.5) * 0.86;
+    const y = Math.floor((size - overlayH) + t * overlayH);
+    const h = Math.ceil(overlayH / steps) + 2; 
+    ctx.fillRect(0, y, size, h);
+  }
+  ctx.restore();
 
   const pad = size * 0.06;
   const maxW = size - pad * 2;
