@@ -40,14 +40,18 @@ async function generateCover(seed, index, title, artist, genre) {
 
   const overlayH = Math.floor(size * 0.52);
   const overlayTop = size - overlayH;
-  ctx.save();
-  ctx.fillStyle = '#000000';
+  const imageData = ctx.getImageData(0, overlayTop, size, overlayH);
+  const data = imageData.data;
   for (let i = 0; i < overlayH; i++) {
     const t = i / (overlayH - 1);
-    ctx.globalAlpha = Math.pow(t, 1.5) * 0.87;
-    ctx.fillRect(0,  overlayTop + i, size, 1);
+    const alpha = Math.pow(t, 1.6) * 0.82; 
+    for (let col = 0; col < size; col++) {
+      const idx = (i * size + col) * 4;
+      data[idx]     = Math.round(data[idx]     * (1 - alpha)); 
+      data[idx + 1] = Math.round(data[idx + 1] * (1 - alpha)); 
+      data[idx + 2] = Math.round(data[idx + 2] * (1 - alpha)); }
   }
-  ctx.restore();
+  ctx.putImageData(imageData, 0, overlayTop);
 
   const pad = size * 0.06;
   const maxW = size - pad * 2;
