@@ -72,7 +72,7 @@ async function generateCover(seed, index, title, artist, genre) {
   const totalH = titleLines.length * titleLineH + artistLines.length * artistLineH + size * 0.03;
   let y = size - pad - totalH + titleLineH;
 
-  ctx.font = `bold ${titleSize}px Arial, sans-serif`;
+  ctx.font = `bold ${titleSize}px sans-serif`;
   ctx.fillStyle = '#ffffff';
   for (const line of titleLines) {
     ctx.fillText(line, pad, y);
@@ -81,7 +81,7 @@ async function generateCover(seed, index, title, artist, genre) {
 
   y += size * 0.02;
 
-  ctx.font = `500 ${artistSize}px Arial, sans-serif`;
+  ctx.font = `bold ${artistSize}px sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.80)';
   for (const line of artistLines) {
     ctx.fillText(line, pad, y);
