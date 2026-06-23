@@ -2,21 +2,21 @@
 
 const { createCanvas, loadImage } = require('canvas');
 
-function wrapText(ctx, text, maxWidth) {
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function wrapLines(text, maxChars) {
   const words = text.split(' ');
   const lines = [];
-  let current = '';
-  for (const word of words) {
-    const test = current ? `${current} ${word}` : word;
-    if (ctx.measureText(test).width > maxWidth && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = test;
-    }
+  let cur = '';
+  for (const w of words) {
+    const next = cur ? `${cur} ${w}` : w;
+    if (next.length > maxChars && cur) { lines.push(cur); cur = w; }
+    else cur = next;
   }
-  if (current) lines.push(current);
-  return lines;
+  if (cur) lines.push(cur);
+  return lines.slice(0, 3);
 }
 
 async function generateCover(seed, index, title, artist, genre) {
@@ -24,17 +24,11 @@ async function generateCover(seed, index, title, artist, genre) {
   const canvas = createCanvas(size, size);
   const ctx = canvas.getContext('2d');
 
-  const picsumSeed = encodeURIComponent(`${seed}:${index}`);
-  const picsumUrl = `https://picsum.photos/seed/${picsumSeed}/${size}/${size}`;
-
   try {
-    const img = await loadImage(picsumUrl);
+    const img = await loadImage(`https://picsum.photos/seed/${encodeURIComponent(`${seed}:${index}`)}/${size}/${size}`);
     ctx.drawImage(img, 0, 0, size, size);
   } catch {
-    const fallback = ctx.createLinearGradient(0, 0, size, size);
-    fallback.addColorStop(0, '#1a1a2e');
-    fallback.addColorStop(1, '#16213e');
-    ctx.fillStyle = fallback;
+    ctx.fillStyle = '#1a1a2e';
     ctx.fillRect(0, 0, size, size);
   }
 
@@ -43,8 +37,7 @@ async function generateCover(seed, index, title, artist, genre) {
   const imageData = ctx.getImageData(0, overlayTop, size, overlayH);
   const data = imageData.data;
   for (let i = 0; i < overlayH; i++) {
-    const t = i / (overlayH - 1);
-    const alpha = Math.pow(t, 1.6) * 0.82; 
+    const alpha = Math.pow(i / (overlayH - 1), 1.6) * 0.82; 
     for (let col = 0; col < size; col++) {
       const idx = (i * size + col) * 4;
       data[idx]     = Math.round(data[idx]     * (1 - alpha)); 
@@ -53,43 +46,21 @@ async function generateCover(seed, index, title, artist, genre) {
   }
   ctx.putImageData(imageData, 0, overlayTop);
 
-  const pad = size * 0.06;
-  const maxW = size - pad * 2;
-  ctx.textAlign = 'left';
-  ctx.shadowColor = 'rgba(0,0,0,0.9)';
-  ctx.shadowBlur = 8;
+  const photoB64 = canvas.toDataURL('image/jpeg', 0.88).split(',')[1];
 
-  const titleSize = Math.max(15, Math.min(32, size * 0.105));
-  ctx.font = `bold ${titleSize}px sans-serif`;
-  const titleLines = wrapText(ctx, title.toUpperCase(), maxW);
+  const lines = wrapLines(title.toUpperCase(), 16);
+  const titleY = size - 28 - (lines.length - 1) * 25;
+  const tspans = lines.map((l, i) => `<tspan x="14" dy="${i === 0 ? 0 : 25}">${esc(l)}</tspan>`).join('');
 
-  const artistSize = Math.max(11, Math.min(18, size * 0.062));
-  ctx.font = `500 ${artistSize}px sans-serif`;
-  const artistLines = wrapText(ctx, artist, maxW);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}">
+  <defs><filter id="sh"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.8"/></filter></defs>
+  <image href="data:image/jpeg;base64,${photoB64}" x="0" y="0" width="${size}" height="${size}"/>
+  <text x="14" y="${titleY}" font-family="Arial,sans-serif" font-weight="800" font-size="22" fill="#fff" filter="url(#sh)">${tspans}</text>
+  <text x="14" y="${size - 10}" font-family="Arial,sans-serif" font-weight="600" font-size="12" fill="#e8e8e8" filter="url(#sh)">${esc(artist.toUpperCase())}</text>
+</svg>`;
 
-  const titleLineH = titleSize * 1.15;
-  const artistLineH = artistSize * 1.2;
-  const totalH = titleLines.length * titleLineH + artistLines.length * artistLineH + size * 0.03;
-  let y = size - pad - totalH + titleLineH;
-
-  ctx.font = `bold ${titleSize}px sans-serif`;
-  ctx.fillStyle = '#ffffff';
-  for (const line of titleLines) {
-    ctx.fillText(line, pad, y);
-    y += titleLineH;
-  }
-
-  y += size * 0.02;
-
-  ctx.font = `bold ${artistSize}px sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.80)';
-  for (const line of artistLines) {
-    ctx.fillText(line, pad, y);
-    y += artistLineH;
-  }
-
-  ctx.shadowBlur = 0;
-  return canvas.toDataURL('image/jpeg', 0.88);
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
 }
+
 
 module.exports = { generateCover };
