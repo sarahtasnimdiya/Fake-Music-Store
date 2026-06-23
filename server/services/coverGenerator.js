@@ -60,11 +60,11 @@ async function generateCover(seed, index, title, artist, genre) {
   ctx.shadowBlur = 8;
 
   const titleSize = Math.max(15, Math.min(32, size * 0.105));
-  ctx.font = `bold ${titleSize}px Arial, sans-serif`;
+  ctx.font = `bold ${titleSize}px sans-serif`;
   const titleLines = wrapText(ctx, title.toUpperCase(), maxW);
 
   const artistSize = Math.max(11, Math.min(18, size * 0.062));
-  ctx.font = `500 ${artistSize}px Arial, sans-serif`;
+  ctx.font = `500 ${artistSize}px sans-serif`;
   const artistLines = wrapText(ctx, artist, maxW);
 
   const titleLineH = titleSize * 1.15;
