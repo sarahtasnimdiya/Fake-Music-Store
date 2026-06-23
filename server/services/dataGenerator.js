@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const { Faker, en, de, base } = require('@faker-js/faker');
+const { Faker, en, de,bn_BD, base } = require('@faker-js/faker');
 const { seedFor, rngFor, pick, times } = require('./rng');
 const { pluralizeEn } = require('./textRules');
 const { generateCover } = require('./coverGenerator');
@@ -13,7 +13,7 @@ for (const file of fs.readdirSync(path.join(__dirname, '../locales'))) {
   LOCALES[data.code] = data;
 }
 
-const FAKER_PACKS = { en, de };
+const FAKER_PACKS = { en, de , bn: bn_BD };
 const fakerInstances = {};
 function getFaker(localeCode) {
   if (!fakerInstances[localeCode]) {
@@ -29,20 +29,34 @@ function listLocales() {
 
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
-function fillTemplate(f, template) {
+function fillTemplate(f, template, locale) {
+  const wl = locale && locale._wordLists;
+  function pw(arr) { return arr[f.number.int({ min: 0, max: arr.length - 1 })]; }
   return template.replace(/\{(\w+)\}/g, (_, key) => {
     switch (key) {
-      case 'Adj': return cap(f.word.adjective());
-      case 'adj': return f.word.adjective();
-      case 'Noun': return cap(f.word.noun());
-      case 'noun': return f.word.noun();
-      case 'Nouns': return cap(pluralizeEn(f.word.noun()));
-      case 'nouns': return pluralizeEn(f.word.noun());
-      case 'Verb': return cap(f.word.verb());
-      case 'verb': return f.word.verb();
-      case 'verbPast': { const v = f.word.verb(); return cap(v.endsWith('e') ? v + 'd' : v + 'ed'); }
-      case 'verbIng': { const v = f.word.verb(); return v.endsWith('e') ? v.slice(0, -1) + 'ing' : v + 'ing'; }
-      case 'Name': case 'name': return f.person.firstName();
+
+      case 'Adj': return cap(wl ? pw(wl.adjectives) : f.word.adjective());
+      case 'adj': return wl ? pw(wl.adjectives) : f.word.adjective();
+      case 'Noun': return cap(wl ? pw(wl.nouns) : f.word.noun());
+      case 'noun': return wl ? pw(wl.nouns) : f.word.noun();
+      case 'Nouns': return wl ? pw(wl.nouns) + 'গুলো' : cap(pluralizeEn(f.word.noun()));
+      case 'nouns': return wl ? pw(wl.nouns) + 'গুলো' : pluralizeEn(f.word.noun());
+      case 'Verb': return cap(wl ? pw(wl.verbs) :f.word.verb());
+      case 'verb': return wl ? pw(wl.verbs) : f.word.verb();
+      case 'verbPast': {
+        if (wl) return pw(wl.verbs);
+         const v = f.word.verb(); return cap(v.endsWith('e') ? v + 'd' : v + 'ed'); 
+        }
+      case 'verbIng': { 
+        if (wl) return pw(wl.verbs) + 'ছি';
+        const v = f.word.verb(); return v.endsWith('e') ? v.slice(0, -1) + 'ing' : v + 'ing'; }
+      case 'Name': case 'name': {
+        if (wl) {
+          const names = [...(wl.femaleNames || []), ...(wl.maleNames || [])];
+          return names.length ? pw(names) : f.person.firstName();
+        }
+      return f.person.firstName();
+      }
       case 'Number': return String(f.number.int({ min: 2, max: 24 }));
       default: return '';
     }
@@ -56,7 +70,7 @@ function pickTemplate(f, templates) {
 function generateTitle(seed, index, locale) {
   const f = getFaker(locale.fakerLocale);
   f.seed(seedFor(seed, index, 'title'));
-  return fillTemplate(f, pickTemplate(f, locale.titleTemplates));
+  return fillTemplate(f, pickTemplate(f, locale.titleTemplates), locale);
 }
 
 function generateArtist(seed, index, locale) {
@@ -64,14 +78,14 @@ function generateArtist(seed, index, locale) {
   f.seed(seedFor(seed, index, 'artist'));
   const isPerson = f.number.float() < 0.55;
   if (isPerson) return f.person.fullName();
-  return fillTemplate(f, pickTemplate(f, locale.bandTemplates));
+  return fillTemplate(f, pickTemplate(f, locale.bandTemplates), locale);
 }
 
 function generateAlbum(seed, index, locale) {
   const f = getFaker(locale.fakerLocale);
   f.seed(seedFor(seed, index, 'album'));
   if (f.number.float() < 0.3) return 'Single';
-  return fillTemplate(f, pickTemplate(f, locale.albumTemplates));
+  return fillTemplate(f, pickTemplate(f, locale.albumTemplates), locale);
 }
 
 function generateGenre(seed, index, locale) {
